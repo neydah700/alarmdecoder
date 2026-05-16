@@ -80,8 +80,6 @@ class SerialDevice(Device):
 
         self._port = interface
         self._id = interface
-        # Timeout = non-blocking to match pyftdi.
-        self._device = serialx.Serial(read_timeout=0, write_timeout=0)
 
     def open(self, baudrate=BAUDRATE, no_reader_thread=False):
         """
@@ -106,7 +104,7 @@ class SerialDevice(Device):
 
         # Open the device and start up the reader thread.
         try:
-            self._device.path = self._port
+            self._device = serialx.Serial(self._port, read_timeout=0, write_timeout=0)
             self._device.open()
             # NOTE: Setting the baudrate before opening the
             #       port caused issues with Moschip 7840/7820
